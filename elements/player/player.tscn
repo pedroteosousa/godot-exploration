@@ -1,0 +1,226 @@
+[gd_scene load_steps=29 format=3 uid="uid://bodcx3djnbowx"]
+
+[ext_resource type="Script" path="res://elements/player/player.gd" id="1_rsoo0"]
+[ext_resource type="Texture2D" uid="uid://bhlerqnhw8qi2" path="res://elements/player/assets/Hero Block.png" id="2_lt6on"]
+[ext_resource type="Texture2D" uid="uid://cxb33tgrupnus" path="res://elements/player/assets/Hero Idle.png" id="2_w4c1n"]
+[ext_resource type="AudioStream" uid="uid://bcqkugpepmqqt" path="res://elements/player/sfx/jump.mp3" id="3_73jnj"]
+[ext_resource type="AudioStream" uid="uid://61ajsmpy8gxr" path="res://elements/player/sfx/parry.mp3" id="4_7pfgl"]
+[ext_resource type="AudioStream" uid="uid://c5xmmut8urxqr" path="res://elements/player/sfx/land.mp3" id="4_a1f0m"]
+[ext_resource type="Script" path="res://addons/behaviour_toolkit/finite_state_machine/fsm.gd" id="6_0ns2a"]
+[ext_resource type="Script" path="res://addons/behaviour_toolkit/finite_state_machine/fsm_transition.gd" id="7_6sj01"]
+[ext_resource type="Script" path="res://elements/player/fsm/on_ground.gd" id="7_lt832"]
+[ext_resource type="Script" path="res://elements/player/fsm/jump.gd" id="7_me8xi"]
+[ext_resource type="Script" path="res://elements/player/fsm/fall.gd" id="8_7p6kc"]
+[ext_resource type="Script" path="res://elements/player/fsm/falling.gd" id="8_w1wlj"]
+[ext_resource type="Script" path="res://elements/player/fsm/jumping.gd" id="9_0jrei"]
+[ext_resource type="Script" path="res://elements/player/fsm/block.gd" id="9_dju3y"]
+[ext_resource type="Script" path="res://elements/player/fsm/land.gd" id="10_7g11j"]
+[ext_resource type="Script" path="res://elements/player/fsm/dash.gd" id="10_shnfh"]
+[ext_resource type="Script" path="res://elements/player/fsm/double_jump.gd" id="11_hc7gy"]
+[ext_resource type="Script" path="res://elements/player/fsm/coyoting.gd" id="14_4mgq6"]
+[ext_resource type="Script" path="res://elements/player/fsm/blocking.gd" id="16_t6h47"]
+[ext_resource type="Script" path="res://elements/player/fsm/stop_blocking.gd" id="17_ngjjn"]
+[ext_resource type="Script" path="res://elements/player/fsm/dashing.gd" id="20_dp5a7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l8io1"]
+atlas = ExtResource("2_lt6on")
+region = Rect2(0, 0, 8, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5pda"]
+atlas = ExtResource("2_w4c1n")
+region = Rect2(0, 0, 8, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x7leb"]
+atlas = ExtResource("2_w4c1n")
+region = Rect2(8, 0, 8, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yy1k2"]
+atlas = ExtResource("2_w4c1n")
+region = Rect2(16, 0, 8, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qgfib"]
+atlas = ExtResource("2_w4c1n")
+region = Rect2(24, 0, 8, 9)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v7x62"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l8io1")
+}],
+"loop": true,
+"name": &"block",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f5pda")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x7leb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yy1k2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qgfib")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bq6nh"]
+radius = 2.0
+height = 5.0
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_layer = 2
+script = ExtResource("1_rsoo0")
+speed = 100.0
+jump_height = 28.0
+jump_time_to_peak = 0.3
+jump_time_to_ground = 0.25
+terminal_velocity = 1000.0
+has_dash = true
+has_double_jump = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(6, 6)
+position_smoothing_enabled = true
+drag_vertical_enabled = true
+drag_top_margin = 0.4
+drag_bottom_margin = 0.4
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_v7x62")
+animation = &"block"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_bq6nh")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 12
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_bq6nh")
+
+[node name="ParrySound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_7pfgl")
+
+[node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "actor")]
+script = ExtResource("6_0ns2a")
+autostart = true
+initial_state = NodePath("Falling")
+actor = NodePath("..")
+
+[node name="OnGround" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("7_lt832")
+
+[node name="Block" type="Node" parent="FiniteStateMachine/OnGround" node_paths=PackedStringArray("next_state")]
+script = ExtResource("9_dju3y")
+next_state = NodePath("../../Blocking")
+
+[node name="Jump" type="Node" parent="FiniteStateMachine/OnGround" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_me8xi")
+next_state = NodePath("../../Jumping")
+
+[node name="Coyote" type="Node" parent="FiniteStateMachine/OnGround" node_paths=PackedStringArray("next_state")]
+script = ExtResource("8_7p6kc")
+next_state = NodePath("../../Coyoting")
+
+[node name="Dash" type="Node" parent="FiniteStateMachine/OnGround" node_paths=PackedStringArray("next_state")]
+script = ExtResource("10_shnfh")
+next_state = NodePath("../../Dashing")
+
+[node name="Falling" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("8_w1wlj")
+
+[node name="Land" type="Node" parent="FiniteStateMachine/Falling" node_paths=PackedStringArray("next_state")]
+script = ExtResource("10_7g11j")
+next_state = NodePath("../../OnGround")
+
+[node name="LandingSound" type="AudioStreamPlayer2D" parent="FiniteStateMachine/Falling/Land"]
+stream = ExtResource("4_a1f0m")
+volume_db = -10.0
+pitch_scale = 5.0
+bus = &"SFX"
+
+[node name="DoubleJump" type="Node" parent="FiniteStateMachine/Falling" node_paths=PackedStringArray("next_state")]
+script = ExtResource("11_hc7gy")
+next_state = NodePath("../../Jumping")
+
+[node name="Dash" type="Node" parent="FiniteStateMachine/Falling" node_paths=PackedStringArray("next_state")]
+script = ExtResource("10_shnfh")
+next_state = NodePath("../../Dashing")
+
+[node name="Jumping" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("9_0jrei")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="FiniteStateMachine/Jumping"]
+stream = ExtResource("3_73jnj")
+volume_db = -10.0
+bus = &"SFX"
+
+[node name="Fall" type="Node" parent="FiniteStateMachine/Jumping" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_6sj01")
+next_state = NodePath("../../Falling")
+use_event = true
+event = "fall"
+
+[node name="Coyoting" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("14_4mgq6")
+
+[node name="Timer" type="Timer" parent="FiniteStateMachine/Coyoting"]
+wait_time = 0.075
+one_shot = true
+
+[node name="Fall" type="Node" parent="FiniteStateMachine/Coyoting" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_6sj01")
+next_state = NodePath("../../Falling")
+use_event = true
+event = "fall"
+
+[node name="Jump" type="Node" parent="FiniteStateMachine/Coyoting" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_me8xi")
+next_state = NodePath("../../Jumping")
+
+[node name="Dash" type="Node" parent="FiniteStateMachine/Coyoting" node_paths=PackedStringArray("next_state")]
+script = ExtResource("10_shnfh")
+next_state = NodePath("../../Dashing")
+
+[node name="Blocking" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("16_t6h47")
+
+[node name="Timer" type="Timer" parent="FiniteStateMachine/Blocking"]
+wait_time = 0.3
+one_shot = true
+
+[node name="StopBlocking" type="Node" parent="FiniteStateMachine/Blocking" node_paths=PackedStringArray("next_state")]
+script = ExtResource("17_ngjjn")
+next_state = NodePath("../../OnGround")
+use_event = true
+event = "stop_blocking"
+
+[node name="Dashing" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("20_dp5a7")
+
+[node name="Timer" type="Timer" parent="FiniteStateMachine/Dashing"]
+wait_time = 0.2
+one_shot = true
+
+[node name="Fall" type="Node" parent="FiniteStateMachine/Dashing" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_6sj01")
+next_state = NodePath("../../Falling")
+use_event = true
+event = "fall"
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="timeout" from="FiniteStateMachine/Coyoting/Timer" to="FiniteStateMachine/Coyoting" method="_on_timer_timeout"]
+[connection signal="timeout" from="FiniteStateMachine/Blocking/Timer" to="FiniteStateMachine/Blocking" method="_on_timer_timeout"]
+[connection signal="timeout" from="FiniteStateMachine/Dashing/Timer" to="FiniteStateMachine/Dashing" method="_on_timer_timeout"]

@@ -1,0 +1,242 @@
+[gd_scene load_steps=29 format=3 uid="uid://d15yljpq3ich7"]
+
+[ext_resource type="Texture2D" uid="uid://dwcjcoxqx63wy" path="res://elements/enemies/skeleton/assets/Skeleton Attack.png" id="1_bptbe"]
+[ext_resource type="Script" path="res://elements/enemies/skeleton/skeleton.gd" id="1_c4m3f"]
+[ext_resource type="Texture2D" uid="uid://clar3tt8u4whd" path="res://elements/enemies/skeleton/assets/Skeleton Idle.png" id="2_n4f2o"]
+[ext_resource type="Texture2D" uid="uid://dhksnxk48txtj" path="res://elements/enemies/skeleton/assets/Skeleton Walk.png" id="3_83ro2"]
+[ext_resource type="Script" path="res://addons/behaviour_toolkit/finite_state_machine/fsm.gd" id="5_u6upk"]
+[ext_resource type="Script" path="res://elements/enemies/skeleton/fsm/idle.gd" id="6_lpqkt"]
+[ext_resource type="Script" path="res://addons/behaviour_toolkit/finite_state_machine/fsm_transition.gd" id="7_1vf0j"]
+[ext_resource type="Script" path="res://elements/enemies/skeleton/fsm/walking.gd" id="8_f84ea"]
+[ext_resource type="Script" path="res://elements/enemies/skeleton/fsm/winding_up.gd" id="9_2e1ra"]
+[ext_resource type="Script" path="res://elements/enemies/skeleton/fsm/attacking.gd" id="10_2nkq0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_smo24"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(0, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yp0cp"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(7, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtxnu"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(14, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_itv5b"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(21, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1fxcf"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(0, 12, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xmtsi"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(7, 12, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o4bee"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(14, 12, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6f5w"]
+atlas = ExtResource("1_bptbe")
+region = Rect2(21, 12, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_co706"]
+atlas = ExtResource("2_n4f2o")
+region = Rect2(0, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q04ba"]
+atlas = ExtResource("2_n4f2o")
+region = Rect2(7, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ixox6"]
+atlas = ExtResource("2_n4f2o")
+region = Rect2(14, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kc7jx"]
+atlas = ExtResource("2_n4f2o")
+region = Rect2(21, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yfx0o"]
+atlas = ExtResource("3_83ro2")
+region = Rect2(0, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ygyar"]
+atlas = ExtResource("3_83ro2")
+region = Rect2(7, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pgx2w"]
+atlas = ExtResource("3_83ro2")
+region = Rect2(14, 0, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppige"]
+atlas = ExtResource("3_83ro2")
+region = Rect2(21, 0, 7, 12)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b7pvu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_smo24")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yp0cp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qtxnu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_itv5b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1fxcf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xmtsi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o4bee")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m6f5w")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_co706")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q04ba")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ixox6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kc7jx")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yfx0o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ygyar")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pgx2w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppige")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6odbv"]
+radius = 3.0
+height = 10.0
+
+[node name="Skeleton" type="CharacterBody2D"]
+collision_layer = 8
+script = ExtResource("1_c4m3f")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+sprite_frames = SubResource("SpriteFrames_b7pvu")
+animation = &"attack"
+autoplay = "idle"
+frame = 7
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_6odbv")
+
+[node name="FloorRayCast2D" type="RayCast2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-6, 0)
+target_position = Vector2(0, 9)
+
+[node name="FrontRayCast2D" type="RayCast2D" parent="."]
+unique_name_in_owner = true
+target_position = Vector2(-7, 0)
+
+[node name="PlayerRayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, 2)
+target_position = Vector2(-37, 0)
+collision_mask = 2
+
+[node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "actor")]
+script = ExtResource("5_u6upk")
+autostart = true
+initial_state = NodePath("Walking")
+actor = NodePath("..")
+
+[node name="Idle" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("6_lpqkt")
+
+[node name="Timer" type="Timer" parent="FiniteStateMachine/Idle"]
+wait_time = 2.0
+one_shot = true
+
+[node name="Walk" type="Node" parent="FiniteStateMachine/Idle" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_1vf0j")
+next_state = NodePath("../../Walking")
+use_event = true
+event = "walk"
+
+[node name="WindUp" type="Node" parent="FiniteStateMachine/Idle" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_1vf0j")
+next_state = NodePath("../../WindingUp")
+use_event = true
+event = "wind_up"
+
+[node name="Walking" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("8_f84ea")
+
+[node name="Idle" type="Node" parent="FiniteStateMachine/Walking" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_1vf0j")
+next_state = NodePath("../../Idle")
+use_event = true
+event = "idle"
+
+[node name="WindUp" type="Node" parent="FiniteStateMachine/Walking" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_1vf0j")
+next_state = NodePath("../../WindingUp")
+use_event = true
+event = "wind_up"
+
+[node name="WindingUp" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("9_2e1ra")
+
+[node name="Timer" type="Timer" parent="FiniteStateMachine/WindingUp"]
+wait_time = 2.0
+one_shot = true
+
+[node name="Attack" type="Node" parent="FiniteStateMachine/WindingUp" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_1vf0j")
+next_state = NodePath("../../Attacking")
+use_event = true
+event = "attack"
+
+[node name="Attacking" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("10_2nkq0")
+
+[node name="Idle" type="Node" parent="FiniteStateMachine/Attacking" node_paths=PackedStringArray("next_state")]
+script = ExtResource("7_1vf0j")
+next_state = NodePath("../../Idle")
+use_event = true
+event = "idle"
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="FiniteStateMachine/WindingUp" method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="timeout" from="FiniteStateMachine/Idle/Timer" to="FiniteStateMachine/Idle" method="_on_timer_timeout"]
+[connection signal="timeout" from="FiniteStateMachine/WindingUp/Timer" to="FiniteStateMachine/WindingUp" method="_on_timer_timeout"]
