@@ -75,6 +75,7 @@ radius = 2.0
 height = 5.0
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
+z_index = 1
 collision_layer = 2
 script = ExtResource("1_rsoo0")
 speed = 100.0

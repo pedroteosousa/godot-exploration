@@ -1,0 +1,103 @@
+[gd_scene load_steps=14 format=3 uid="uid://cq20kpsoc84fv"]
+
+[ext_resource type="Script" path="res://elements/flag/flag.gd" id="1_o5gec"]
+[ext_resource type="Texture2D" uid="uid://p4bbn5ejs57r" path="res://elements/flag/assets/Flag.png" id="1_xoqeg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rlrm5"]
+size = Vector2(6, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ldny5"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ob8k6"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(16, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bhfnl"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bvxpc"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a57td"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ohe4j"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(24, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ikg4m"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(0, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ay2na"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(8, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5jhj8"]
+atlas = ExtResource("1_xoqeg")
+region = Rect2(16, 8, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ul2ex"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ldny5")
+}],
+"loop": true,
+"name": &"lowered",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ob8k6")
+}],
+"loop": true,
+"name": &"raised",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bhfnl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bvxpc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a57td")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ohe4j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ikg4m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ay2na")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5jhj8")
+}],
+"loop": false,
+"name": &"raising",
+"speed": 12.0
+}]
+
+[node name="Flag" type="Area2D"]
+z_index = 2
+collision_mask = 2
+script = ExtResource("1_o5gec")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_rlrm5")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ul2ex")
+animation = &"lowered"
+autoplay = "lowered"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
